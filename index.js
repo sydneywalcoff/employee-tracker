@@ -75,6 +75,11 @@ const addDept = () => {
         }
     ]);
     // SQL
+    const sql = `INSERT INTO departments (name) VALUES (?)`;
+    const params = [];
+    db.query(sql, (err, rows) => {
+        console.log(rows);
+    });
 };
 
 const addRole = () => {
