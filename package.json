@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sydneywalcoff/employee-tracker#readme",
   "dependencies": {
-    "inquirer": "^8.0.0"
+    "inquirer": "^8.0.0",
+    "mysql2": "^2.2.5"
   }
 }
