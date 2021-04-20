@@ -59,7 +59,10 @@ const viewAllRoles = () => {
 
 const viewAllEmployees = () => {
     console.log('you are viewing all employees');
-    // SQL
+    const sql = `SELECT * FROM employees`;
+    db.query(sql, (err, rows) => {
+        console.table(rows);
+    });
 };
 
 const addDept = () => {
