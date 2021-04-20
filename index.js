@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const cTable = require('console.table');
 
 
 const db = mysql.createConnection(
@@ -7,7 +8,7 @@ const db = mysql.createConnection(
         host: 'localhost',
         user: 'root',
         password: '59Zyv@VbJwBJ',
-        database: 'election'
+        database: 'human_resources'
     },
     console.log('Connected to the human_resources database')
 );
@@ -42,8 +43,10 @@ const validateInput = selectedInput => {
 
 const viewAllDept = () => {
     console.log('you are viewing all departments');
-    // SQL commands to display department table
-
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+        console.table(rows);
+    });
 };
 
 const viewAllRoles = () => {
