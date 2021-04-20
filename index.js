@@ -42,7 +42,7 @@ const validateInput = selectedInput => {
 };
 
 const viewAllDept = () => {
-    console.log('you are viewing all departments');
+    // console.log('you are viewing all departments');
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -51,7 +51,10 @@ const viewAllDept = () => {
 
 const viewAllRoles = () => {
     console.log('you are viewing all roles');
-    // SQL to display roles
+    const sql = `SELECT * FROM roles`;
+    db.query(sql, (err, rows) => {
+        console.table(rows);
+    });
 };
 
 const viewAllEmployees = () => {
@@ -109,11 +112,11 @@ const promptMenu = () => {
             choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role']
         }
     ];
-    return inquirer.prompt(menu)   
+    return inquirer.prompt(menu).then(menuChoice => validateInput(menuChoice)); 
 };
 
 const init = () => {
-    promptMenu().then(menuChoice => validateInput(menuChoice)); 
+    promptMenu();
 };
 
 init();
