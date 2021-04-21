@@ -16,7 +16,7 @@ const db = mysql.createConnection(
 const validateInput = selectedInput => {
     switch(selectedInput.menu) {
         case 'view all departments':
-            viewAllDept();
+            viewAllDepts();
             break;
         case 'view all roles':
             viewAllRoles();
@@ -33,15 +33,15 @@ const validateInput = selectedInput => {
         case 'add an employee':
             addEmployee();
             break;
-        case 'update an employee':
-            updateEmployee();
+        case 'update an employee role':
+            updateEmployeeRole();
             break;
         default:
             console.log('error');
     }
 };
 
-const viewAllDept = () => {
+const viewAllDepts = () => {
     console.log(`
     You are updating an existing employee!
     `);
@@ -113,7 +113,7 @@ const addRole = () => {
         {
             type: "input",
             name: "department_id",
-            message: "What is the department id of the role?"
+            message: "What department is this role?"
         }
     ])
     .then(roleData => {
@@ -135,6 +135,7 @@ const addEmployee = () => {
     console.log(`
     You are adding an employee!
     `);
+    // query employees table
     inquirer.prompt([
         {
             type: "input",
@@ -148,13 +149,14 @@ const addEmployee = () => {
         },
         {
             type: "input",
-            name: "role_id",
-            message: "What is the role id of the employee?"
+            name: "role",
+            message: "What is the employee's role?"
         },
         {
-            type: "input",
-            name: "manager_id",
-            message: "What is the manager id of the employee?" 
+            type: "checklist",
+            name: "manager_name",
+            message: "Who is the manager of this employee?",
+            // choices: [ employees table results ]
         }
     ])
     .then(roleData => {
@@ -172,16 +174,23 @@ const addEmployee = () => {
     });
 };
 
-const updateEmployee = () => {
-d
-    // inquirer.prompt([
-    //     {
-    //         type: 'list',
-    //         name: 'updateName',
-    //         message: 'Which employee would you like to update?',
-    //         choices: []
-    //     }
-    // ]);
+const updateEmployeeRole = () => {
+    // query employees
+    // query roles table
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'updateRole',
+            message: 'Which employee would you like to update?',
+            // choices: [ employees query results ]
+        },
+        {
+            type: 'list',
+            name: 'updateRole',
+            message: 'What is their new role?',
+            // choices: [ roles table results ]
+        },
+    ]);
 };
 
 const promptMenu = () => {
