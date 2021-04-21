@@ -86,6 +86,18 @@ const addDept = () => {
 
 const addRole = () => {
     // query departments
+    const sql = `SELECT name FROM departments`;
+    let departments = [];
+    
+    db.query(sql, (err, rows) => {
+        if(err) {
+            console.log(err);
+        }
+        rows.forEach( department => {
+            departments.push(department.name);
+        })
+    })
+
     inquirer.prompt([
         {
             type: "input",
@@ -99,15 +111,16 @@ const addRole = () => {
         },
         {
             type: "list",
-            name: "department_id",
+            name: "department_name",
             message: "What department is this role?",
-            // choices: [ departments results ]
+            choices: departments
         }
     ])
+    // need to convert department_name into id
     .then(roleData => {
         // SQL
-        const sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`;
-        const params = [roleData.role_name, roleData.role_salary, roleData.department_id];
+        const sql = `INSERT INTO roles (title, salary, department_name) VALUES (?,?,?)`;
+        const params = [roleData.role_name, roleData.role_salary, roleData.department_name];
         db.query(sql, params, (err, rows) => {
             console.log(`
             Role added!
