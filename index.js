@@ -45,14 +45,15 @@ const viewAllDepts = () => {
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
         console.table(rows);
+        promptMenu();
     });
 };
 
 const viewAllRoles = () => {
-
     const sql = `SELECT * FROM roles`;
     db.query(sql, (err, rows) => {
         console.table(rows);
+        promptMenu();
     });
 };
 
@@ -65,6 +66,7 @@ const viewAllEmployees = () => {
     `;
     db.query(sql, (err, rows) => {
         console.table(rows);
+        promptMenu();
     });
 };
 
@@ -84,6 +86,7 @@ const addDept = () => {
             `);
             db.query(`SELECT * FROM departments`, (err, rows) => {
                 console.table(rows);
+                promptMenu();
             });
         });
     });
@@ -132,6 +135,7 @@ const addRole = () => {
             `);
             db.query(`SELECT * FROM roles`, (err, rows) => {
                 console.table(rows);
+                promptMenu();
             });
         });
     });
@@ -172,6 +176,7 @@ const addEmployee = () => {
             `);
             db.query(`SELECT * FROM employees`, (err, rows) => {
                 console.table(rows);
+                promptMenu();
             });
         });
     });
@@ -193,7 +198,10 @@ const updateEmployeeRole = () => {
             message: 'What is their new role?',
             // choices: [ roles table results ]
         },
-    ]);
+    ])
+    .then(updatedEmployee => {
+        
+    });
 };
 
 const promptMenu = () => {
