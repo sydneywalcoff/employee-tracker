@@ -42,7 +42,9 @@ const validateInput = selectedInput => {
 };
 
 const viewAllDept = () => {
-    // console.log('you are viewing all departments');
+    console.log(`
+    You are updating an existing employee!
+    `);
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -50,7 +52,9 @@ const viewAllDept = () => {
 };
 
 const viewAllRoles = () => {
-    console.log('you are viewing all roles');
+    console.log(`
+    You are viewing all roles!
+    `);
     const sql = `SELECT * FROM roles`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -58,7 +62,9 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    console.log('you are viewing all employees');
+    console.log(`
+    You are viewing all employees!
+    `);
     const sql = `SELECT * FROM employees`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -167,9 +173,7 @@ const addEmployee = () => {
 };
 
 const updateEmployee = () => {
-    console.log(`
-    You are updating an existing employee!
-    `);
+d
     // inquirer.prompt([
     //     {
     //         type: 'list',
