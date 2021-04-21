@@ -42,9 +42,6 @@ const validateInput = selectedInput => {
 };
 
 const viewAllDepts = () => {
-    console.log(`
-    You are updating an existing employee!
-    `);
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -52,9 +49,7 @@ const viewAllDepts = () => {
 };
 
 const viewAllRoles = () => {
-    console.log(`
-    You are viewing all roles!
-    `);
+
     const sql = `SELECT * FROM roles`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -62,9 +57,6 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    console.log(`
-    You are viewing all employees!
-    `);
     const sql = `SELECT * FROM employees`;
     db.query(sql, (err, rows) => {
         console.table(rows);
@@ -72,9 +64,6 @@ const viewAllEmployees = () => {
 };
 
 const addDept = () => {
-    console.log(`
-    You are adding a new department!
-    `);
     inquirer.prompt([
         {
             type: "input",
@@ -96,9 +85,7 @@ const addDept = () => {
 };
 
 const addRole = () => {
-    console.log(`
-    You are adding a new role!
-    `);
+    // query departments
     inquirer.prompt([
         {
             type: "input",
@@ -111,9 +98,10 @@ const addRole = () => {
             message: "What is this role's salary?"
         },
         {
-            type: "input",
+            type: "list",
             name: "department_id",
-            message: "What department is this role?"
+            message: "What department is this role?",
+            // choices: [ departments results ]
         }
     ])
     .then(roleData => {
@@ -132,9 +120,6 @@ const addRole = () => {
 };
 
 const addEmployee = () => {
-    console.log(`
-    You are adding an employee!
-    `);
     // query employees table
     inquirer.prompt([
         {
