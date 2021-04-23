@@ -125,8 +125,12 @@ const addRole = () => {
             choices: departments
         }
     ])
-    // need to convert department_name into id
     .then(roleData => {
+        // need to convert department_name into id
+        db.query(`SELECT id FROM roles WHERE ? = roles.title`, [roleData.department_name], (err, rows) => {
+            console.log(rows);
+        })
+        
         // SQL
         const sql = `INSERT INTO roles (title, salary, department_name) VALUES (?,?,?)`;
         const params = [roleData.role_name, roleData.role_salary, roleData.department_name];
