@@ -126,23 +126,23 @@ const addRole = () => {
         }
     ])
     .then(roleData => {
-        // need to convert department_name into id
-        db.query(`SELECT id FROM roles WHERE ? = roles.title`, [roleData.department_name], (err, rows) => {
-            console.log(rows);
-        })
-        
-        // SQL
-        const sql = `INSERT INTO roles (title, salary, department_name) VALUES (?,?,?)`;
-        const params = [roleData.role_name, roleData.role_salary, roleData.department_name];
-        db.query(sql, params, (err, rows) => {
-            console.log(`
-            Role added!
-            `);
-            db.query(`SELECT * FROM roles`, (err, rows) => {
-                console.table(rows);
-                promptMenu();
+        // need to get id from department_name
+        const departmentTitle = roleData.department_name;
+        let departmentId;
+        db.query(`SELECT id FROM departments WHERE name = ?`, [departmentTitle], (err, rows) => {
+            departmentId = rows[0].id;
+            const params = [roleData.role_name, roleData.role_salary, departmentId];
+            console.log(params)
+            db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`, params, (err, rows) => {
+                console.log(`
+                Role added!
+                `);
+                db.query(`SELECT * FROM roles`, (err, rows) => {
+                    console.table(rows);
+                    promptMenu();
+                });
             });
-        });
+        })
     });
 };
 
