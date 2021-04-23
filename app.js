@@ -160,7 +160,7 @@ const addEmployee = () => {
         })
     })
 
-    // query employees
+    // query employees for possible managers
     let employees = [];
 
     db.query(`SELECT first_name, last_name FROM employees`, (err, rows) => {
@@ -197,43 +197,53 @@ const addEmployee = () => {
             choices: employees
         }
     ])
-    .then(roleData => {
-        console.log(roleData);
+    .then(employeeData => {
+        let paramsArr = [ employeeData.first_name, employeeData.last_name ];
         // get id of manager to insert into manager_id
-
-
-        // const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
-        // const params = [roleData.first_name, roleData.last_name, roleData.role_id, roleData.manager_id];
-        // db.query(sql, params, (err, rows) => {
-        //     console.log(`
-        //     Employee added!
-        //     `);
-        //     db.query(`SELECT * FROM employees`, (err, rows) => {
-        //         console.table(rows);
-        //         promptMenu();
-        //     });
-        // });
-
-        promptMenu();
+        const managerName = employeeData.manager_name;
+        let nameArr = managerName.split(' ');
+        const firstName = nameArr[0];
+        const lastName = nameArr[1];
+        let roleTitle = employeeData.role;
+        // get role id
+        db.query(`SELECT * FROM roles WHERE title = ?`, [roleTitle], (err, rows) => {
+            const roleId = rows[0].id;
+            paramsArr.push(roleId);
+        })
+        // get manager id
+        db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [firstName, lastName], (err, rows) => {
+            const managerId = rows[0].id;
+            paramsArr.push(managerId);
+        })
+        db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`, paramsArr, (err, rows) => {
+            console.log(`
+            Employee added!
+            `);
+            db.query(`SELECT * FROM employees`, (err, rows) => {
+                console.table(rows);
+                // promptMenu();
+            });
+        });
+        
     });
 };
 
 const updateEmployeeRole = () => {
     // query roles table
     const sql = `SELECT title FROM roles`;
-    let roles = [];
+    let rolesArr = [];
     
     db.query(sql, (err, rows) => {
         if(err) {
             console.log(err);
         }
         rows.forEach( role => {
-            roles.push(role.title);
+            rolesArr.push(role.title);
         })
     })
 
     // query employees
-    let employees = [];
+    let employeesArr = [];
 
     db.query(`SELECT first_name, last_name FROM employees`, (err, rows) => {
         if(err) {
@@ -241,26 +251,25 @@ const updateEmployeeRole = () => {
         }
         rows.forEach( employee => {
             const fullName = `${employee.first_name} ${employee.last_name}`
-            employees.push(fullName);
+            employeesArr.push(fullName);
         })
     })
-
-  
     inquirer.prompt([
         {
             type: 'list',
             name: 'updateEmployee',
             message: 'Which employee would you like to update?',
-            choices: employees
+            choices: employeesArr
         },
         {
             type: 'list',
             name: 'updateRole',
             message: 'What is their new role?',
-            choices: roles
+            choices: rolesArr
         }
     ])
     .then(updatedEmployee => {
+        console.log(employees, roles)
         console.log(updatedEmployee);
 
         promptMenu();
