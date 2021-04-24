@@ -37,6 +37,9 @@ const validateInput = selectedInput => {
         case 'update an employee role':
             updateEmployeeRole();
             break;
+        case 'update an employee manager':
+            updateManager();
+            break; 
         default:
             console.log('error');
     }
@@ -297,13 +300,68 @@ const updateEmployeeRole = () => {
     })
 };
 
+const updateManager = () => {
+    // query employees
+    db.query(`SELECT first_name, last_name FROM employees`, (err, rows) => {;
+        const employeeArr = [];
+        rows.forEach(employee => {
+            const firstName = employee.first_name;
+            const lastName = employee.last_name;
+            const fullName = `${firstName} ${lastName}`
+            employeeArr.push(fullName);
+        })
+        const employeeArrNull = employeeArr;
+        employeeArrNull.push('NULL');
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'employee',
+                message: 'Which employee would you like to update?',
+                choices: employeeArr
+            },
+            {
+                type: 'list',
+                name: 'newManager',
+                message: 'Who is their new manager?',
+                choices: employeeArrNull
+            }
+        ]).then(updatedEmployee => {
+            const employeeName = updatedEmployee.employee.split(' ');
+            const employeeFirstName = employeeName[0];
+            const employeeLastName = employeeName[1];
+            const managerName = updatedEmployee.newManager.split(' ');
+            const managerFirstName = managerName[0];
+            const managerLastName = managerName[1];
+            // query employee id
+            db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [employeeFirstName, employeeLastName], (err, rows) => {
+                const employeeId = rows[0].id;
+
+                db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [managerFirstName, managerLastName], (err, rows) => {
+                    const managerId = rows[0].id;
+
+                    db.query(`UPDATE employees SET manager_id = ? WHERE id = ?`, [managerId, employeeId], (err, rows) => {
+                        if(err) {
+                            console.log(err);
+                        }
+                        db.query(`SELECT * FROM employees`, (err, rows) => {
+                            console.table(rows);
+                            promptMenu();
+                        })
+                    })
+                })
+            })
+            // query manager id
+        })
+    })
+}
+
 const promptMenu = () => {
     const menu = [
         {
             type: "list",
             name: "menu",
             message: "What would you like to do?",
-            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role']
+            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role', 'update an employee manager']
         }
     ];
     return inquirer.prompt(menu).then(menuChoice => validateInput(menuChoice)); 
