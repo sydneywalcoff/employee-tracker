@@ -216,6 +216,10 @@ const addEmployee = () => {
             paramsArr.push(managerId);
         })
         db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`, paramsArr, (err, rows) => {
+            if(err) {
+                console.log(err);
+                return;
+            }
             console.log(`
             Employee added!
             `);
