@@ -310,8 +310,6 @@ const updateManager = () => {
             const fullName = `${firstName} ${lastName}`
             employeeArr.push(fullName);
         })
-        const employeeArrNull = employeeArr;
-        employeeArrNull.push('NULL');
         inquirer.prompt([
             {
                 type: 'list',
@@ -323,7 +321,7 @@ const updateManager = () => {
                 type: 'list',
                 name: 'newManager',
                 message: 'Who is their new manager?',
-                choices: employeeArrNull
+                choices: employeeArr
             }
         ]).then(updatedEmployee => {
             const employeeName = updatedEmployee.employee.split(' ');
@@ -336,13 +334,17 @@ const updateManager = () => {
             db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [employeeFirstName, employeeLastName], (err, rows) => {
                 const employeeId = rows[0].id;
 
+                // query manager id
                 db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [managerFirstName, managerLastName], (err, rows) => {
                     const managerId = rows[0].id;
 
+                    // update using employee and manager ids
                     db.query(`UPDATE employees SET manager_id = ? WHERE id = ?`, [managerId, employeeId], (err, rows) => {
                         if(err) {
                             console.log(err);
                         }
+
+                        // show updated table 
                         db.query(`SELECT * FROM employees`, (err, rows) => {
                             console.table(rows);
                             promptMenu();
@@ -350,7 +352,6 @@ const updateManager = () => {
                     })
                 })
             })
-            // query manager id
         })
     })
 }
