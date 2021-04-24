@@ -220,13 +220,13 @@ const addEmployee = () => {
 
 const updateEmployeeRole = () => {
     // query roles table
-    const sql = `SELECT title FROM roles`;
     let roles = [];
     
-    db.query(sql, (err, rows) => {
+    db.query(`SELECT title FROM roles`, (err, rows) => {
         if(err) {
             console.log(err);
         }
+    }).then(rows => {
         rows.forEach( role => {
             roles.push(role.title);
         })
@@ -240,11 +240,10 @@ const updateEmployeeRole = () => {
             console.log(err);
         }
         rows.forEach( employee => {
-            const fullName = `${employee.first_name} ${employee.last_name}`
+            const fullName = `${employee.first_name} ${employee.last_name}`;
             employees.push(fullName);
         })
     })
-
   
     inquirer.prompt([
         {
