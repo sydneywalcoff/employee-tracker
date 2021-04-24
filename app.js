@@ -218,7 +218,7 @@ const addEmployee = () => {
                             `);
                             db.query(`SELECT * FROM employees`, (err, rows) => {
                                 console.table(rows);
-                                // promptMenu();
+                                promptMenu();
                             });
                         });
 
@@ -250,7 +250,6 @@ const updateEmployeeRole = () => {
                 const fullName = `${employee.first_name} ${employee.last_name}`;
                 employees.push(fullName);
             })
-            // console.log(`roles: ${roles}, employees: ${employees}`);
 
             inquirer.prompt([
                 {
@@ -288,6 +287,7 @@ const updateEmployeeRole = () => {
                             }
                             db.query(`SELECT * FROM employees`, (err, rows) => {
                                 console.table(rows);
+                                promptMenu();
                             })
                         })
                     })
