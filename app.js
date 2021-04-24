@@ -147,88 +147,86 @@ const addRole = () => {
 };
 
 const addEmployee = () => {
-    // query roles table
-    let roles = [];
-    
+    // query roles table    
     db.query(`SELECT title FROM roles`, (err, rows) => {
+        const roles = [];
         if(err) {
             console.log(err);
         }
         rows.forEach( role => {
             roles.push(role.title);
         })
-    })
 
-    // query employees for possible managers
-    let employees = [];
-
-    db.query(`SELECT first_name, last_name FROM employees`, (err, rows) => {
-        if(err) {
-            console.log(err);
-        }
-        rows.forEach( manager => {
-            const fullName = `${manager.first_name} ${manager.last_name}`
-            employees.push(fullName);
-        })
-    })
-
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "first_name",
-            message: "What is the first name of the employee?"
-        },
-        {
-            type: "input",
-            name: "last_name",
-            message: "What is the last name of the employee?"
-        },
-        {
-            type: "list",
-            name: "role",
-            message: "What is the employee's role?",
-            choices: roles
-        },
-        {
-            type: "list",
-            name: "manager_name",
-            message: "Who is the manager of this employee?",
-            choices: employees
-        }
-    ])
-    .then(employeeData => {
-        let paramsArr = [ employeeData.first_name, employeeData.last_name ];
-        // get id of manager to insert into manager_id
-        const managerName = employeeData.manager_name;
-        let nameArr = managerName.split(' ');
-        const firstName = nameArr[0];
-        const lastName = nameArr[1];
-        let roleTitle = employeeData.role;
-        // get role id
-        db.query(`SELECT * FROM roles WHERE title = ?`, [roleTitle], (err, rows) => {
-            const roleId = rows[0].id;
-            paramsArr.push(roleId);
-        })
-        // get manager id
-        db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [firstName, lastName], (err, rows) => {
-            const managerId = rows[0].id;
-            paramsArr.push(managerId);
-        })
-        let query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
-        db.query(query, paramsArr, (err, rows) => {
+        // query employees for possible managers
+        db.query(`SELECT first_name, last_name FROM employees`, (err, rows) => {
+            const employees = [];
             if(err) {
                 console.log(err);
-                return;
             }
-            console.log(`
-            Employee added!
-            `);
-            db.query(`SELECT * FROM employees`, (err, rows) => {
-                console.table(rows);
-                // promptMenu();
+            rows.forEach( manager => {
+                const fullName = `${manager.first_name} ${manager.last_name}`
+                employees.push(fullName);
+            })
+
+            inquirer.prompt([
+                {
+                    type: "input",
+                    name: "first_name",
+                    message: "What is the first name of the employee?"
+                },
+                {
+                    type: "input",
+                    name: "last_name",
+                    message: "What is the last name of the employee?"
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "What is the employee's role?",
+                    choices: roles
+                },
+                {
+                    type: "list",
+                    name: "manager_name",
+                    message: "Who is the manager of this employee?",
+                    choices: employees
+                }
+            ])
+            .then(employeeData => {
+                let paramsArr = [ employeeData.first_name, employeeData.last_name ];
+                // get id of manager to insert into manager_id
+                const managerName = employeeData.manager_name;
+                let nameArr = managerName.split(' ');
+                const firstName = nameArr[0];
+                const lastName = nameArr[1];
+                let roleTitle = employeeData.role;
+                // get role id
+                db.query(`SELECT * FROM roles WHERE title = ?`, [roleTitle], (err, rows) => {
+                    const roleId = rows[0].id;
+                    paramsArr.push(roleId);
+                                    // get manager id
+                    db.query(`SELECT id FROM employees WHERE first_name = ? AND last_name = ?`, [firstName, lastName], (err, rows) => {
+                        const managerId = rows[0].id;
+                        paramsArr.push(managerId);
+                        db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`, paramsArr, (err, rows) => {
+                            if(err) {
+                                console.log(err);
+                                return;
+                            }
+                            console.log(`
+                            Employee added!
+                            `);
+                            db.query(`SELECT * FROM employees`, (err, rows) => {
+                                console.table(rows);
+                                // promptMenu();
+                            });
+                        });
+
+                    })
+                })
             });
-        });
-    });
+        })
+    })
 };
 
 const updateEmployeeRole = () => {
