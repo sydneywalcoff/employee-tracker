@@ -40,7 +40,10 @@ const validateInput = selectedInput => {
             break;
         case 'update an employee manager':
             updateManager();
-            break; 
+            break;
+        case 'view by manager':
+            viewByManager();
+            break;
         default:
             console.log('error');
     }
@@ -410,7 +413,56 @@ const updateManager = () => {
             })
         })
     })
-}
+};
+
+const viewByManager = () => {
+    // query for managers
+    db.query(queries.getManagers, (err, rows) => {
+        if(err) {
+            console.log(err);
+            return;
+        }
+        const managersArr = [];
+        rows.forEach(manager => {
+            const name = manager.manager;
+            if(name){
+                managersArr.push(name);
+            }
+        })
+        console.log(managersArr);
+        inquirer.prompt([
+            {
+                type: "list",
+                name: "manager",
+                message: "Which manager's team do you want to see?",
+                choices: managersArr
+            }
+        ])
+        .then(teamData => {
+            const manager = teamData.manager;
+            const name = manager.split(' ');
+            db.query(queries.getEmployeeId, name, (err, rows) => {
+                const managerId = rows[0].id;
+                db.query(queries.getManagerTeam, [managerId], (err, rows) => {
+                    if(err) {
+                        console.log(err);
+                        return;
+                    }
+                    const team = rows[0];
+                
+                    if(!team) {
+                        console.log(`That employee doesn't manage a team right now!`);
+                        promptMenu();
+                    }
+                    else {
+                        console.table(rows);
+                        promptMenu();
+                    }
+                })
+            })
+        });
+    })
+};
 
 const promptMenu = () => {
     const menu = [
@@ -418,7 +470,7 @@ const promptMenu = () => {
             type: "list",
             name: "menu",
             message: "What would you like to do?",
-            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role', 'update an employee manager']
+            choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role', 'update an employee manager', 'view by manager']
         }
     ];
     return inquirer.prompt(menu).then(menuChoice => validateInput(menuChoice)); 

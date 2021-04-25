@@ -17,6 +17,12 @@ module.exports = {
     getEmployeeId: `SELECT id FROM employees WHERE first_name = ? AND last_name = ?`,
     getRoleId: `SELECT id FROM roles WHERE title = ?`,
     getDepartmentId: `SELECT id FROM departments WHERE name = ?`,
+    getManagers: `SELECT concat(employees.first_name, ' ', employees.last_name) AS manager
+    FROM employees
+    LEFT JOIN employees manager
+    ON (employees.manager_id = manager.id)`,
+    getManagerTeam: `SELECT concat(employees.first_name, ' ', employees.last_name) AS team FROM employees WHERE manager_id = ?`,
     updateRoleId: `UPDATE employees SET role_id = ? WHERE id = ?`,
     updateManagerId: `UPDATE employees SET manager_id = ? WHERE id = ?`
+
 }
