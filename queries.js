@@ -11,7 +11,7 @@ module.exports = {
     LEFT JOIN departments ON (roles.department_id = departments.id)`,
 
     viewAllDepts: `SELECT * FROM departments`,
-    viewAllRoles: `SELECT roles.title, roles.salary, departments.name AS department
+    viewAllRoles: `SELECT roles.id, roles.title, roles.salary, departments.name AS department
     FROM roles
     LEFT JOIN departments ON (roles.department_id =departments.id)`,
     getEmployeeId: `SELECT id FROM employees WHERE first_name = ? AND last_name = ?`,
