@@ -75,18 +75,26 @@ const addDept = () => {
     inquirer.prompt([
         {
             type: "input",
-            name: "department_name",
+            name: "name",
             message: "What is the name of the department?",
             validate: departmentName => {
                 if(!departmentName) {
-                    console.log('Please enter the name of a department!');
+                    console.log('Please enter the name of this department!');
+                    return false;
+                } else {
+                    return true;
                 }
             }
         }
     ])
-    .then(params => {
+    .then(department => {
+        if(!department.name){
+            console.log('Please enter the name of the department');
+            addDept();
+            return;
+        } 
         const sql = `INSERT INTO departments (name) VALUES (?)`;
-        db.query(sql, params.department_name, (err, rows) => {
+        db.query(sql, [department.name], (err, rows) => {
             if(err) {
                 console.log(err);
                 return;
@@ -98,7 +106,8 @@ const addDept = () => {
                 console.table(rows);
                 promptMenu();
             });
-        });
+        
+        })
     });
 };
 
@@ -123,7 +132,9 @@ const addRole = () => {
             validate: roleName => {
                 if(!roleName) {
                     console.log('Please enter the name of the role!');
-                }
+                    return false;
+                } 
+                return true;
             }
         },
         {
@@ -133,7 +144,9 @@ const addRole = () => {
             validate: roleSalary => {
                 if(!roleSalary) {
                     console.log('Please enter the salary for this role!');
+                    return false;
                 }
+                return true;
             }
         },
         {
@@ -154,7 +167,6 @@ const addRole = () => {
             }
             departmentId = rows[0].id;
             const params = [roleData.role_name, roleData.role_salary, departmentId];
-            console.log(params)
             db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`, params, (err, rows) => {
                 if(err) {
                     console.log(err);
@@ -206,7 +218,9 @@ const addEmployee = () => {
                     validate: employeeFirstName => {
                         if(!employeeFirstName) {
                             console.log('Please enter the first name of the employee!');
+                            return false;
                         }
+                        return true;
                     }
                 },
                 {
@@ -216,7 +230,9 @@ const addEmployee = () => {
                     validate: employeeLastName => {
                         if(!employeeLastName) {
                             console.log('Please enter the last name of the employee!');
+                            return false;
                         }
+                        return true;
                     }
                 },
                 {
