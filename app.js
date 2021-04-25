@@ -1,19 +1,8 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
 const cTable = require('console.table');
 const queries = require('./queries');
-
-
-const db = mysql.createConnection(
-    {
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: 'human_resources'
-    },
-    console.log('Connected to the human_resources database')
-);
+const db = require('./db/connection');
 
 const validateInput = selectedInput => {
     switch(selectedInput.menu) {
