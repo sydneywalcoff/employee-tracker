@@ -274,7 +274,7 @@ const updateEmployeeRole = () => {
             console.log(err);
         }
         rows.forEach( role => {
-            rolesArr.push(role.title);
+            roles.push(role.title);
         })
          // query employees
         db.query(queries.viewAllEmployees, (err, rows) => {
@@ -346,7 +346,10 @@ const updateEmployeeRole = () => {
 
 const updateManager = () => {
     // query employees
-    db.query(queries.viewAllEmployees, (err, rows) => {;
+    db.query(queries.viewAllEmployees, (err, rows) => {
+        if(err) {
+            console.log(err);
+        }
         const employeeArr = [];
         rows.forEach(employee => {
             const firstName = employee.first_name;
@@ -375,12 +378,18 @@ const updateManager = () => {
             const managerFirstName = managerName[0];
             const managerLastName = managerName[1];
             // query employee id
-            db.query(getEmployeeId, [employeeFirstName, employeeLastName], (err, rows) => {
+            db.query(queries.getEmployeeId, [employeeFirstName, employeeLastName], (err, rows) => {
                 const employeeId = rows[0].id;
+                if(err) {
+                    console.log(err);
+                }
 
                 // query manager id
-                db.query(getEmployeeId, [managerFirstName, managerLastName], (err, rows) => {
+                db.query(queries.getEmployeeId, [managerFirstName, managerLastName], (err, rows) => {
                     const managerId = rows[0].id;
+                    if(err) {
+                        console.log(err);
+                    }
 
                     // update using employee and manager ids
                     db.query(queries.updateManagerId, [managerId, employeeId], (err, rows) => {
@@ -390,6 +399,9 @@ const updateManager = () => {
 
                         // show updated table 
                         db.query(queries.viewAllEmployees, (err, rows) => {
+                            if(err) {
+                                console.log(err);
+                            }
                             console.table(rows);
                             promptMenu();
                         })

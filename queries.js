@@ -10,13 +10,10 @@ module.exports = {
     LEFT JOIN roles ON (employees.role_id = roles.id)
     LEFT JOIN departments ON (roles.department_id = departments.id)`,
 
-    viewEmployeeManager: `SELECT employee.first_name, employee.last_name, manager.first_name AS manager_name
-    FROM employees employee
-    LEFT JOIN employees manager
-    ON employee.manager_id = manager.id`,
-
     viewAllDepts: `SELECT * FROM departments`,
-    viewAllRoles: `SELECT * FROM roles`,
+    viewAllRoles: `SELECT roles.title, roles.salary, departments.name AS department
+    FROM roles
+    LEFT JOIN departments ON (roles.department_id =departments.id)`,
     getEmployeeId: `SELECT id FROM employees WHERE first_name = ? AND last_name = ?`,
     getRoleId: `SELECT id FROM roles WHERE title = ?`,
     getDepartmentId: `SELECT id FROM departments WHERE name = ?`,
