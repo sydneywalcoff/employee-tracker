@@ -1,7 +1,3 @@
-
-
-
-
 module.exports = {
     //  employee name, role title, salary, department and managers
     viewAllEmployees: `SELECT employees.first_name, employees.last_name, roles.title AS role, roles.salary, departments.name AS department, concat(manager.first_name, ' ', manager.last_name) AS manager_name
@@ -24,5 +20,4 @@ module.exports = {
     getManagerTeam: `SELECT concat(employees.first_name, ' ', employees.last_name) AS team FROM employees WHERE manager_id = ?`,
     updateRoleId: `UPDATE employees SET role_id = ? WHERE id = ?`,
     updateManagerId: `UPDATE employees SET manager_id = ? WHERE id = ?`
-
 }
