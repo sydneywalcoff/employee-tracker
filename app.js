@@ -87,7 +87,12 @@ const addDept = () => {
         {
             type: "input",
             name: "department_name",
-            message: "What is the name of the department?"
+            message: "What is the name of the department?",
+            validate: departmentName => {
+                if(!departmentName) {
+                    console.log('Please enter the name of a department!');
+                }
+            }
         }
     ])
     .then(params => {
@@ -125,12 +130,22 @@ const addRole = () => {
         {
             type: "input",
             name: "role_name",
-            message: "What is the name of the role?"
+            message: "What is the name of the role?",
+            validate: roleName => {
+                if(!roleName) {
+                    console.log('Please enter the name of the role!');
+                }
+            }
         },
         {
             type: "input",
             name: "role_salary",
-            message: "What is this role's salary?"
+            message: "What is this role's salary?",
+            validate: roleSalary => {
+                if(!roleSalary) {
+                    console.log('Please enter the salary for this role!');
+                }
+            }
         },
         {
             type: "list",
@@ -198,12 +213,22 @@ const addEmployee = () => {
                 {
                     type: "input",
                     name: "first_name",
-                    message: "What is the first name of the employee?"
+                    message: "What is the first name of the employee?",
+                    validate: employeeFirstName => {
+                        if(!employeeFirstName) {
+                            console.log('Please enter the first name of the employee!');
+                        }
+                    }
                 },
                 {
                     type: "input",
                     name: "last_name",
-                    message: "What is the last name of the employee?"
+                    message: "What is the last name of the employee?",
+                    validate: employeeLastName => {
+                        if(!employeeLastName) {
+                            console.log('Please enter the last name of the employee!');
+                        }
+                    }
                 },
                 {
                     type: "list",
